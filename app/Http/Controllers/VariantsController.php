@@ -14,6 +14,7 @@ class VariantsController extends Controller
     public function index(Products $product)
     {
         $variant = $product->variants;
+
         return view('variants.index', compact('product', 'variant'));
     }
 
@@ -34,7 +35,8 @@ class VariantsController extends Controller
         $product->variants()->save($variant);
         $product->updateStock();
         
-        return redirect()->route('products.index', $product->id)->with('success', 'Variant created successfully');
+        return redirect()->route('products.index', $product->id)
+                         ->with('success', 'Variant created successfully');
     }
 
     /**
@@ -99,6 +101,6 @@ class VariantsController extends Controller
         $product->updateStock();
 
         return redirect()->route('products.variants.index', $product->id)
-            ->with('success', 'Variant deleted successfully');
+                         ->with('success', 'Variant deleted successfully');
     }
 }

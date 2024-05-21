@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-// use App\Http\Controllers\CobaController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\VariantsController;
@@ -18,43 +17,33 @@ use App\Http\Controllers\DashboardController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-// Route::get('/',[CobaController::class, 'index'])->name('/');
 
-Route::get('/',[AuthController::class, 'login'])->name('login');
+// Authentication Routes
+Route::get('/', [AuthController::class, 'login'])->name('login');
+Route::post('/login/process', [AuthController::class, 'login_process'])->name('login.process');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/register/process', [AuthController::class, 'register_process'])->name('register.process');
 
-Route::post('/login/process',[AuthController::class, 'login_process'])->name('login.process');
-
-Route::get('/logout',[AuthController::class,'logout'])->name('logout');
-
-Route::get('/register',[AuthController::class, 'register'])->name('register');
-
-Route::post('/register/process',[AuthController::class, 'register_process'])->name('register.process');
-
-
+// Dashboard Route (Protected)
 Route::prefix('admin')->middleware('auth')->group(function() {
-    Route::get('/dashboard',[DashboardController::class, 'index'])->name('dashboard');
-    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
-Route::resource('users', UsersController::class);
+// Users Resource Route
+Route::resource('users', UsersController::class)->middleware('auth');
 
-// Route::resource('/products', ProductsController::class);
+// Products Resource Route
 Route::resource('products', ProductsController::class);
-Route::resource('/products', ProductsController::class);
-Route::resource('/products.variants', VariantsController::class)->shallow(); //bagian variant, double code dibawah
 
-Route::get('/products-variants', [ProductsController::class, 'productVariantList'])->name('products.variants.list');
-
-Route::get('products/{id}/variants', [ProductsController::class, 'show'])->name('products.variants');
-
-// Routes for variants nested under products
-Route::prefix('/products/{product}')->group(function() {
+// Nested Variants Routes under Products
+Route::prefix('products/{product}')->group(function() {
     Route::get('/variants', [VariantsController::class, 'index'])->name('products.variants.index');
     Route::get('/variants/create', [VariantsController::class, 'create'])->name('products.variants.create');
     Route::post('/variants', [VariantsController::class, 'store'])->name('products.variants.store');
 });
 
-// Routes for variants (using shallow routing)
+// Shallow Routes for Variants
 Route::prefix('variants')->group(function() {
     Route::get('{variant}', [VariantsController::class, 'show'])->name('variants.show');
     Route::get('{variant}/edit', [VariantsController::class, 'edit'])->name('variants.edit');
@@ -62,5 +51,8 @@ Route::prefix('variants')->group(function() {
     Route::delete('{variant}', [VariantsController::class, 'destroy'])->name('variants.destroy');
 });
 
+// Custom Route for Updating Variant Stock
 Route::patch('/variants/{variant}/update-stock', [VariantsController::class, 'updateStock'])->name('variants.updateStock');
 
+// Additional Route for Products and Variants List
+Route::get('/products-variants', [ProductsController::class, 'productVariantList'])->name('products.variants.list');

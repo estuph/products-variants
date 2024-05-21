@@ -16,10 +16,6 @@
                 <label for="name">Product Name</label>
                 <input type="text" id="name" class="form-control" value="{{ $product->name }}" readonly>
             </div>
-            {{-- <div class="form-group">
-                <label for="price">Price</label>
-                <input type="text" id="price" class="form-control" value="Rp {{ number_format($product->price, 0, ',', '.') }}" readonly>
-            </div> --}}
             <div class="form-group">
                 <label for="rating">Rating</label>
                 <input type="number" id="rating" class="form-control" value="{{ $product->rating }}" readonly>

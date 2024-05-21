@@ -13,7 +13,6 @@
         </div>
         <div class="card-body">
             <form method="POST" action="{{route('variants.updateStock', $variant->id)}}">
-                {{-- {{ route('variants.update', $variant->id) }} --}}
                 @csrf
                 @method('PATCH')
                 <div class="form-group">

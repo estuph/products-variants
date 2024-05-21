@@ -12,8 +12,9 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Products::with('variants')->get(); // Ambil semua produk beserta variannya
-         return view('products.index', compact('products')); // Kirim data ke view
+        $products = Products::with('variants')->get(); 
+
+        return view('products.index', compact('products')); 
     }
 
     /**
@@ -46,7 +47,6 @@ class ProductsController extends Controller
      */
     public function show($id)
     {
-        // return view('products.show', compact('product'));
         $product = Products::with('variants')->findOrFail($id);
         $variants = $product->variants;
 
@@ -59,6 +59,7 @@ class ProductsController extends Controller
     public function edit($id)
     {
         $product = Products::findOrFail($id);
+        
         return view('products.edit', compact('product'));
     }
 
@@ -76,10 +77,11 @@ class ProductsController extends Controller
         $product = Products::findOrFail($id);
         $product->update($request->all());
 
-        $product->updateStock(); // Ensure stock is updated after any changes
+        $product->updateStock(); 
 
 
-        return redirect()->route('products.index', $product->id)->with('success', 'Product updated successfully.');
+        return redirect()->route('products.index', $product->id)
+                        ->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -96,6 +98,7 @@ class ProductsController extends Controller
     public function productVariantList(Products $product)
     {
         $products = Products::with('variants')->get();
+
         return view('products_variants.index', compact('products'));    
     }
 }
